@@ -1,4 +1,5 @@
-package de.olivervier;
+package de.olivervier.counter;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,29 +10,25 @@ import de.olivervier.util.FileUtil;
 
 public class InheritenceLevelCounter {
 
-    private String basePath = null;
-
-    public void execute(String rootPath) {
-
-        if(rootPath == null || rootPath.isBlank()) {
-            basePath = System.getProperty("java.class.path");
-        } else {
-            basePath = rootPath;
-        }
+    public void execute(String basePath) {
 
         if(basePath == null) {
             System.err.println("Cannot get execution path");
             return;
         }
 
-        var files = findFilesRec(basePath);
-        var classes = findClassesOfFiles(files);
-        var inheritanceLevelPerFile = findSumOfInheritanceLevel(classes);
+        List<File> files = findFilesRec(basePath);
+        List<Class> classes = findClassesOfFiles(basePath, files);
+        Map<String, Integer> inheritanceLevelPerFile = findSumOfInheritanceLevel(classes);
 
+        printInheritanceLevelPerFile(inheritanceLevelPerFile);
+    }
+
+    private void printInheritanceLevelPerFile(Map<String, Integer> inheritanceLevelPerFile) {
         inheritanceLevelPerFile.forEach((name, value) -> System.out.println(name + ": " + value));
     }
 
-    public List<File> findFilesRec(String uri) {
+    private List<File> findFilesRec(String uri) {
 
         List<File> files = new ArrayList<File>();
         
@@ -60,7 +57,7 @@ public class InheritenceLevelCounter {
         return files;
     }
 
-    public List<Class> findClassesOfFiles(List<File> files) {
+    private List<Class> findClassesOfFiles(String basePath, List<File> files) {
 
         List<Class> classes = new ArrayList<>();
 
@@ -82,7 +79,7 @@ public class InheritenceLevelCounter {
         return classes;
     }
 
-    public Map<String, Integer> findSumOfInheritanceLevel(List<Class> classes) {
+    private Map<String, Integer> findSumOfInheritanceLevel(List<Class> classes) {
         
         Map<String, Integer> inheritanceLevelPerFile = new HashMap<>();
         
@@ -93,7 +90,7 @@ public class InheritenceLevelCounter {
         return inheritanceLevelPerFile;
     }
 
-    public int countLevelInheritanceRec(int count, Class clazz) {
+    private int countLevelInheritanceRec(int count, Class clazz) {
         if(clazz.getSuperclass() != null && !(clazz.getSuperclass().equals(Object.class))) {
             count = countLevelInheritanceRec(count, clazz.getSuperclass()) + 1;
         }
