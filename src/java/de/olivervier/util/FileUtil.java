@@ -1,6 +1,13 @@
 package de.olivervier.util;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class FileUtil {
 
@@ -58,7 +65,8 @@ public class FileUtil {
         String extension = name.substring(lastDotIndex, name.length());
         return extension.length() > 0 ? extension : null;
     }
-
+    
+    //TODO: Add check, whether paths actually go together
     /**
      * Finds the relative path between a base and <b>known</b> subfolder-path.
      * </br>
@@ -69,6 +77,11 @@ public class FileUtil {
      * @return relative path
      */
     public static String getRelativePath(String basepath, String subfolderPath) {
+
+        if(basepath.equals(subfolderPath)) {
+            return "";
+        }
+
         String relativePathName = subfolderPath.replace(basepath, "");
 		if(relativePathName.charAt(0) == File.separatorChar) {
 			relativePathName = relativePathName.substring(1, relativePathName.length());
@@ -112,5 +125,48 @@ public class FileUtil {
         }
 
         return packageName.substring(0, lastDotIndex);
+    }
+
+    public static void main(String[] args) {
+        FileUtil fileUtil = new FileUtil();
+        fileUtil.copyFolder("C:\\Users\\ovier\\git\\inheritence_level_counter\\src",
+                            "C:\\Users\\ovier\\git\\inheritence_level_counter\\projects\\"+LocalDateTime.now().toString().replace(":", "_"));
+    }
+
+    /**
+     * 
+     * @param sourcePath
+     * @param destinationPath
+     */
+    public void copyFolder(String sourceURI, String destinationURI) {
+        
+        File sourceDirectory = new File(sourceURI);
+        
+        if(!sourceDirectory.exists() || !sourceDirectory.isDirectory()) {
+            String errorMsg = """
+                    Source-Pfad: %s
+                    Existiert? %b
+                    Ist Ordner? %b
+                    """.formatted(sourceDirectory.getAbsolutePath(),
+                                  sourceDirectory.exists(),
+                                  sourceDirectory.isDirectory());
+            System.err.println(errorMsg);
+            return;
+        }
+
+        Path sourcePath = Paths.get(sourceURI);
+        try { 
+            Files.walk(sourcePath).forEach(sourceSubPath -> {
+                Path destinationSubPath = Paths.get(destinationURI, 
+                                                    FileUtil.getRelativePath(sourceURI, sourceSubPath.toString()));
+                try {
+					Files.copy(sourceSubPath, destinationSubPath, StandardCopyOption.REPLACE_EXISTING);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
