@@ -4,26 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.olivervier.reader.ClassFinder;
+import de.olivervier.io.ClassFinder;
 
 public class InheritenceLevelCounter {
 
-    public void execute(String basePath) {
-
-        if(basePath == null) {
-            System.err.println("Cannot get execution path");
-            return;
-        }
-
+    public Map<String, Integer> countInheritenceLevel(String basePath) {
         ClassFinder classFinder = new ClassFinder();
         List<Class> classes = classFinder.findClassesAtURI(basePath);
-        Map<String, Integer> inheritanceLevelPerFile = findSumOfInheritanceLevel(classes);
-
-        printInheritanceLevelPerFile(inheritanceLevelPerFile);
-    }
-
-    private void printInheritanceLevelPerFile(Map<String, Integer> inheritanceLevelPerFile) {
-        inheritanceLevelPerFile.forEach((name, value) -> System.out.println(name + ": " + value));
+        return findSumOfInheritanceLevel(classes);
     }
 
     private Map<String, Integer> findSumOfInheritanceLevel(List<Class> classes) {
