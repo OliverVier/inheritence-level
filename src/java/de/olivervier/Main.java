@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Scanner;
 
 import de.olivervier.counter.InheritenceLevelCounter;
+import de.olivervier.counter.InheritenceLevelHandler;
 
 public class Main {
     
@@ -38,7 +39,7 @@ public class Main {
                 continue;
             }
 
-            new InheritenceLevelCounter().execute(file.getAbsolutePath());
+            new InheritenceLevelHandler().countInheritenceLevel(file.getAbsolutePath());
             break;
         }
     }
