@@ -1,4 +1,4 @@
-package de.olivervier.reader;
+package de.olivervier.io;
 
 import java.io.File;
 import java.util.ArrayList;
