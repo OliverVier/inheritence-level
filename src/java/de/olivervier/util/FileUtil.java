@@ -138,7 +138,7 @@ public class FileUtil {
      * @param sourcePath
      * @param destinationPath
      */
-    public void copyFolder(String sourceURI, String destinationURI) {
+    public static void copyFolder(String sourceURI, String destinationURI) {
         
         File sourceDirectory = new File(sourceURI);
         
