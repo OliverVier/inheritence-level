@@ -3,8 +3,8 @@ package de.olivervier;
 import java.io.File;
 import java.util.Scanner;
 
-import de.olivervier.counter.InheritenceLevelCounter;
 import de.olivervier.counter.InheritenceLevelHandler;
+import de.olivervier.util.ProjectLoader;
 
 public class Main {
     
@@ -30,7 +30,7 @@ public class Main {
                 break;
             }
 
-            // Let Java File class reading filepath and check for validity
+            // Let Java File class read filepath and check for validity
 
             File file = new File(userInput);
 
@@ -39,6 +39,14 @@ public class Main {
                 continue;
             }
 
+            // Before going through each class, we have to make sure to load the JAR,
+            // so that the classes are known.
+
+            try {
+                new ProjectLoader().loadProject(file.getAbsolutePath());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             new InheritenceLevelHandler().countInheritenceLevel(file.getAbsolutePath());
             break;
         }

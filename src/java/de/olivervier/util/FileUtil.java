@@ -127,17 +127,7 @@ public class FileUtil {
         return packageName.substring(0, lastDotIndex);
     }
 
-    public static void main(String[] args) {
-        FileUtil fileUtil = new FileUtil();
-        fileUtil.copyFolder("C:\\Users\\ovier\\git\\inheritence_level_counter\\src",
-                            "C:\\Users\\ovier\\git\\inheritence_level_counter\\projects\\"+LocalDateTime.now().toString().replace(":", "_"));
-    }
 
-    /**
-     * 
-     * @param sourcePath
-     * @param destinationPath
-     */
     public static void copyFolder(String sourceURI, String destinationURI) {
         
         File sourceDirectory = new File(sourceURI);
