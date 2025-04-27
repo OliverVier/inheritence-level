@@ -6,8 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class FileUtil {
 
@@ -43,8 +41,8 @@ public class FileUtil {
      * 
      * Examples
      * 
-     * <p>- test.pdf -> pdf</p>
-     * <p>- test.p -> p </p>
+     * <p>- test.pdf -> .pdf</p>
+     * <p>- test.p -> .p </p>
      * <p>- test. -> null </p>
      * <p>- test -> null </p>
      * 
