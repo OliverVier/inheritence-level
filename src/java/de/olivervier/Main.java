@@ -4,13 +4,13 @@ import java.io.File;
 import java.util.Scanner;
 
 import de.olivervier.counter.InheritenceLevelHandler;
-import de.olivervier.util.ProjectLoader;
+import de.olivervier.util.FileUtil;
 
 public class Main {
     
     private static final Main INST = new Main();
     private final String ESCAPE_CHARACTERS = "q";
-    private final String ERROR_IS_NOT_DIRECTORY = "Given filepath is not pointing at a directory.";
+    private final String ERROR_IS_NOT_JAR_FILE = "Given filepath is not pointing at a JAR file.";
     private final Scanner SCANNER = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -32,22 +32,16 @@ public class Main {
 
             // Let Java File class read filepath and check for validity
 
-            File file = new File(userInput);
+            File jarFile = new File(userInput);
 
-            if(!file.isDirectory()) {
-                INST.print(INST.ERROR_IS_NOT_DIRECTORY);
+            if(!FileUtil.getFileExtension(jarFile).toLowerCase().equals(".jar")) {
+                INST.print(INST.ERROR_IS_NOT_JAR_FILE);
                 continue;
             }
-
-            // Before going through each class, we have to make sure to load the JAR,
-            // so that the classes are known.
-
-            try {
-                new ProjectLoader().loadProject(file.getAbsolutePath());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            new InheritenceLevelHandler().countInheritenceLevel(file.getAbsolutePath());
+  
+            InheritenceLevelHandler handler = new InheritenceLevelHandler();
+            handler.countInheritenceLevel(jarFile.getAbsolutePath());
+            
             break;
         }
     }
@@ -64,8 +58,8 @@ public class Main {
 
         Type '%s' to exit
         or
-        Type java classpath to project
-        for example: C:\\users\\...\\git\\Project\\src\\java
+        Type path to JAR file
+        for example: C:\\users\\...\\Desktop\\project.jar
         """.formatted(ESCAPE_CHARACTERS);
 
         print(helpText);

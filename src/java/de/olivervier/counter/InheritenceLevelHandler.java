@@ -3,7 +3,7 @@ package de.olivervier.counter;
 import java.util.Map;
 
 public class InheritenceLevelHandler {
-    
+     
     public void countInheritenceLevel(String basePath) {
         InheritenceLevelCounter counter = new InheritenceLevelCounter();
         Map<String, Integer> inheritenceLevelPerName = counter.countInheritenceLevel(basePath);

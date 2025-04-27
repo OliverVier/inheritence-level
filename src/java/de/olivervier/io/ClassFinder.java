@@ -1,64 +1,75 @@
 package de.olivervier.io;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import de.olivervier.util.FileUtil;
+import de.olivervier.util.ProjectClassLoader;
 
 public class ClassFinder {
     
-    private List<File> findFilesRec(String uri) {
+    private List<String> findFilesInJAR(String uri){
 
-        List<File> files = new ArrayList<File>();
-        
-        File basepathFile = new File(uri);
-        
-        if(basepathFile.isFile()) {
-            files.add(basepathFile);
-        }
-
-        if(basepathFile.listFiles() == null) {
-            return files;
-        }
-		
-        for(File file : basepathFile.listFiles()) {
-            String fileExtension = FileUtil.getFileExtension(file);
-
-            if(fileExtension == null) {
-                files.addAll(findFilesRec(file.getAbsolutePath()));
+        try (JarFile jarFile = new JarFile(new File(uri))) {
+            List<String> filePathsInJAR = new ArrayList<>();
+            Iterator<JarEntry> iterator = jarFile.entries().asIterator();
+            
+            while(iterator.hasNext()) {
+                JarEntry entry = iterator.next();
+                String entryFilePath = entry.getName();
+                
+                String entryFileExtension = FileUtil.getFileExtension(entryFilePath);
+                                                    
+                if(entryFilePath.contains("$") || entryFileExtension == null 
+                                                 || !entryFileExtension.toLowerCase()
+                                                                       .equals(".class")) {
+                    continue;
+                }
+                filePathsInJAR.add(entry.getName());
             }
 
-            if(fileExtension != null && FileUtil.getFileExtension(file).equals(".java")) {				
-                files.add(file);
-            }
+            return filePathsInJAR;
+        } catch(IOException e) {
+            e.printStackTrace();
+            return null;
         }
-		
-        return files;
     }
 
     public List<Class> findClassesAtURI(String uri) {
 
-        List<File> files = findFilesRec(uri);
+        List<String> files = findFilesInJAR(uri);
+        URLClassLoader classLoader;
+
+        try {
+            classLoader = new ProjectClassLoader().getClassLoader(uri);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
 
         List<Class> classes = new ArrayList<>();
 
-        for (File file : files) {
-
-            String fileName = FileUtil.getRelativePath(uri, file.getAbsolutePath());
-            String convertedPackageName = FileUtil.convertFolderToPackageName(fileName);
+        for (String relativeFilePath : files) {
+            
+            String convertedPackageName = FileUtil.convertFolderToPackageName(relativeFilePath);
+            
+            Class clazz = null;
 
             try {
-                Class clazz = Class.forName(convertedPackageName);
+                clazz = classLoader.loadClass(convertedPackageName);
                 classes.add(clazz);
-            } catch (ClassNotFoundException e) {
-                System.out.println("Could not find class under given name " + convertedPackageName);
-            } catch (ExceptionInInitializerError e) {
-                e.printStackTrace();
-            }
+            } 
+            catch (ClassNotFoundException e) {} 
+            catch (NoClassDefFoundError e) {} 
+            catch (Exception e) {}
         }
-
+        
         return classes;
     }
-
 }
