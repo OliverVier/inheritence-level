@@ -11,7 +11,10 @@ public class InheritenceLevelHandler {
     }
 
     private void printInheritanceLevelPerFile(Map<String, Integer> inheritanceLevelPerFile) {
-        inheritanceLevelPerFile.forEach((name, value) -> System.out.println(name + ": " + value));
+        inheritanceLevelPerFile.entrySet()
+                                .stream()
+                                .sorted((e1,e2) -> Integer.compare(e1.getValue(), e2.getValue()))
+                                .forEach(e -> System.out.println("L%d - %s".formatted(e.getValue(), e.getKey())));
     }
 
 }
