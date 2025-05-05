@@ -25,6 +25,20 @@ public class InheritenceLevelCounter {
         return inheritanceLevelPerFile;
     }
 
+    //Returns the amount of classes in a inheritence level 
+    private Map<Integer, Integer> groupByInheritanceLevel(List<Class> classes) {
+        Map<Integer, Integer> amountOfClassesPerLevel = new HashMap<>();
+        for(Class clazz : classes) {
+            int level = countLevelInheritanceRec(0, clazz);
+            if(amountOfClassesPerLevel.containsKey(level)) {
+                amountOfClassesPerLevel.put(level, amountOfClassesPerLevel.get(level)+1);
+            } else {
+                amountOfClassesPerLevel.put(level, 1);
+            }
+        }
+        return amountOfClassesPerLevel;
+    }
+
     private int countLevelInheritanceRec(int count, Class clazz) {
         if(clazz.getSuperclass() != null && !(clazz.getSuperclass().equals(Object.class))) {
             count = countLevelInheritanceRec(count, clazz.getSuperclass()) + 1;
