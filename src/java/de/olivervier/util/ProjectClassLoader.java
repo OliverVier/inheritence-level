@@ -5,6 +5,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
+import de.olivervier.i18n.MessageReader;
+
 public class ProjectClassLoader {
 
     public ProjectClassLoader() {}
@@ -12,7 +14,7 @@ public class ProjectClassLoader {
     public URLClassLoader getClassLoader (String pathToJar) throws Exception {
         
         if(pathToJar == null || pathToJar.isEmpty()) {
-            throw new Exception("pathToJar is empty");
+            throw new Exception(MessageReader.getMessage("ERROR_IS_NOT_JAR_FILE"));
         }
         
         try {
