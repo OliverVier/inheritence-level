@@ -38,10 +38,23 @@ public class Main {
                 INST.print(MessageReader.getMessage("ERROR_IS_NOT_JAR_FILE"));
                 continue;
             }
-  
-            InheritenceLevelHandler handler = new InheritenceLevelHandler();
-            handler.countInheritenceLevel(jarFile.getAbsolutePath());
+
+            INST.print(MessageReader.getMessage("UI_PICK_OPERATION"));
             
+            int option = INST.SCANNER.nextInt();
+            InheritenceLevelHandler handler = new InheritenceLevelHandler();
+            
+            switch (option) {
+                case 1:
+                    handler.countInheritenceLevel(jarFile.getAbsolutePath());
+                    break;
+                case 2:
+                    handler.countClassesPerInheritenceLevel(jarFile.getAbsolutePath());
+                    break;
+                default:
+                    INST.print(MessageReader.getMessage("ERROR_UNEXPECTED_INPUT"));
+                    break;
+            }
             break;
         }
     }

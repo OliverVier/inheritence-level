@@ -14,7 +14,13 @@ public class InheritenceLevelCounter {
         return findSumOfInheritanceLevel(classes);
     }
 
-    private Map<String, Integer> findSumOfInheritanceLevel(List<Class> classes) {
+    public Map<Integer, Integer> groupByInheritenceLevel(String basePath) {
+        ClassFinder classFinder = new ClassFinder();
+        List<Class<?>> classes = classFinder.findClassesAtURI(basePath);
+        return groupByInheritanceLevel(classes);
+    }
+
+    private Map<String, Integer> findSumOfInheritanceLevel(List<Class<?>> classes) {
         
         Map<String, Integer> inheritanceLevelPerFile = new HashMap<>();
         
