@@ -41,7 +41,7 @@ public class ClassFinder {
         }
     }
 
-    public List<Class> findClassesAtURI(String uri) {
+    public List<Class<?>> findClassesAtURI(String uri) {
 
         List<String> files = findFilesInJAR(uri);
         URLClassLoader classLoader;
@@ -53,13 +53,13 @@ public class ClassFinder {
             return null;
         }
 
-        List<Class> classes = new ArrayList<>();
+        List<Class<?>> classes = new ArrayList<>();
 
         for (String relativeFilePath : files) {
             
             String convertedPackageName = FileUtil.convertFolderToPackageName(relativeFilePath);
             
-            Class clazz = null;
+            Class<?> clazz = null;
 
             try {
                 clazz = classLoader.loadClass(convertedPackageName);
