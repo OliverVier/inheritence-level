@@ -132,9 +132,9 @@ public class FileUtil {
         
         if(!sourceDirectory.exists() || !sourceDirectory.isDirectory()) {
             String errorMsg = """
-                    Source-Pfad: %s
-                    Existiert? %b
-                    Ist Ordner? %b
+                    Source-Path: %s
+                    Exists? %b
+                    Is folder? %b
                     """.formatted(sourceDirectory.getAbsolutePath(),
                                   sourceDirectory.exists(),
                                   sourceDirectory.isDirectory());

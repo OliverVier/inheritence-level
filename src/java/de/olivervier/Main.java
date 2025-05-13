@@ -26,7 +26,7 @@ public class Main {
             }
 
             if(userInput.equals(INST.ESCAPE_CHARACTERS)) {
-                System.out.println("Quitting program");
+                System.out.println(MessageReader.getMessage("UI_USER_EXITS_PROGRAM"));
                 break;
             }
 
