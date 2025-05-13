@@ -8,34 +8,34 @@ import de.olivervier.io.ClassFinder;
 
 public class InheritenceLevelCounter {
 
-    public Map<String, Integer> countInheritenceLevel(String basePath) {
+    public Map<String, Integer> countLevelPerClass(String basePath) {
         ClassFinder classFinder = new ClassFinder();
         List<Class<?>> classes = classFinder.findClassesAtURI(basePath);
-        return findSumOfInheritanceLevel(classes);
+        return countLevelPerClass(classes);
     }
 
-    public Map<Integer, Integer> groupByInheritenceLevel(String basePath) {
+    public Map<Integer, Integer> countClassesPerLevel(String basePath) {
         ClassFinder classFinder = new ClassFinder();
         List<Class<?>> classes = classFinder.findClassesAtURI(basePath);
-        return groupByInheritanceLevel(classes);
+        return countClassesPerLevel(classes);
     }
 
-    private Map<String, Integer> findSumOfInheritanceLevel(List<Class<?>> classes) {
+    private Map<String, Integer> countLevelPerClass(List<Class<?>> classes) {
         
         Map<String, Integer> inheritanceLevelPerFile = new HashMap<>();
         
         for(Class<?> clazz : classes) {
-            inheritanceLevelPerFile.put(clazz.getName(), countLevelInheritanceRec(0, clazz));
+            inheritanceLevelPerFile.put(clazz.getName(), countLevelPerClassRec(0, clazz));
         }
 
         return inheritanceLevelPerFile;
     }
 
     //Returns the amount of classes in a inheritence level 
-    private Map<Integer, Integer> groupByInheritanceLevel(List<Class<?>> classes) {
+    private Map<Integer, Integer> countClassesPerLevel(List<Class<?>> classes) {
         Map<Integer, Integer> amountOfClassesPerLevel = new HashMap<>();
         for(Class<?> clazz : classes) {
-            int level = countLevelInheritanceRec(0, clazz);
+            int level = countLevelPerClassRec(0, clazz);
             if(amountOfClassesPerLevel.containsKey(level)) {
                 amountOfClassesPerLevel.put(level, amountOfClassesPerLevel.get(level)+1);
             } else {
@@ -45,9 +45,9 @@ public class InheritenceLevelCounter {
         return amountOfClassesPerLevel;
     }
 
-    private int countLevelInheritanceRec(int count, Class<?> clazz) {
+    private int countLevelPerClassRec(int count, Class<?> clazz) {
         if(clazz.getSuperclass() != null && !(clazz.getSuperclass().equals(Object.class))) {
-            count = countLevelInheritanceRec(count, clazz.getSuperclass()) + 1;
+            count = countLevelPerClassRec(count, clazz.getSuperclass()) + 1;
         }
         return count;
     }
