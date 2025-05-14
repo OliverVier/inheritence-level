@@ -138,7 +138,7 @@ public class FileUtil {
                     """.formatted(sourceDirectory.getAbsolutePath(),
                                   sourceDirectory.exists(),
                                   sourceDirectory.isDirectory());
-            System.err.println(errorMsg);
+            Logger.printInfo(errorMsg);
             return;
         }
 

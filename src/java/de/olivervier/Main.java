@@ -5,7 +5,8 @@ import java.util.Scanner;
 
 import de.olivervier.counter.InheritenceLevelHandler;
 import de.olivervier.i18n.MessageReader;
-import de.olivervier.util.FileUtil;
+import de.olivervier.util.JARValidator;
+import de.olivervier.util.Logger;
 
 public class Main {
     
@@ -26,20 +27,19 @@ public class Main {
             }
 
             if(userInput.equals(INST.ESCAPE_CHARACTERS)) {
-                System.out.println(MessageReader.getMessage("UI_USER_EXITS_PROGRAM"));
+                Logger.printInfo(MessageReader.getMessage("UI_USER_EXITS_PROGRAM"));
                 break;
             }
 
             // Let Java File class read filepath and check for validity
 
             File jarFile = new File(userInput);
-
-            if(!FileUtil.getFileExtension(jarFile).toLowerCase().equals(".jar")) {
-                INST.print(MessageReader.getMessage("ERROR_IS_NOT_JAR_FILE"));
+            
+            if(!JARValidator.isJARFileValid(jarFile)) {
                 continue;
             }
 
-            INST.print(MessageReader.getMessage("UI_PICK_OPERATION"));
+            Logger.printInfo(MessageReader.getMessage("UI_PICK_OPERATION"));
             
             int option = INST.SCANNER.nextInt();
             InheritenceLevelHandler handler = new InheritenceLevelHandler();
@@ -49,24 +49,20 @@ public class Main {
                     handler.countInheritenceLevel(jarFile.getAbsolutePath());
                     break;
                 case 2:
-                    handler.countClassesPerInheritenceLevel(jarFile.getAbsolutePath());
+                    handler.countClassesPerLevel(jarFile.getAbsolutePath());
                     break;
                 default:
-                    INST.print(MessageReader.getMessage("ERROR_UNEXPECTED_INPUT"));
+                    Logger.printInfo(MessageReader.getMessage("ERROR_UNEXPECTED_INPUT"));
                     break;
             }
             break;
         }
     }
 
-    private void print(String message) {
-        System.out.println(message);
-    }
-
     private void printHelp() {
         String helpText = MessageReader.getMessage("UI_HELP_TEXT")
                                        .formatted(ESCAPE_CHARACTERS);
-        print(helpText);
+        Logger.printInfo(helpText);
     }
 
 }

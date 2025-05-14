@@ -2,6 +2,8 @@ package de.olivervier.counter;
 
 import java.util.Map;
 
+import de.olivervier.util.Logger;
+
 public class InheritenceLevelHandler {
      
     public void countInheritenceLevel(String basePath) {
@@ -20,14 +22,14 @@ public class InheritenceLevelHandler {
         inheritanceLevelPerFile.entrySet()
                                 .stream()
                                 .sorted((e1,e2) -> Integer.compare(e1.getValue(), e2.getValue()))
-                                .forEach(e -> System.out.println("L%d - %s".formatted(e.getValue(), e.getKey())));
+                                .forEach(e -> Logger.printInfo("L%d - %s".formatted(e.getValue(), e.getKey())));
     }
 
     private void printAmountOfClassesPerLevel(Map<Integer, Integer> amountOfClassesPerLevel) {
         amountOfClassesPerLevel.entrySet()
                                 .stream()
                                 .sorted((e1,e2) -> Integer.compare(e1.getKey(), e2.getKey()))
-                                .forEach(e -> System.out.println("L%d - %d".formatted(e.getKey(), e.getValue())));
+                                .forEach(e -> Logger.printInfo("L%d - %d".formatted(e.getKey(), e.getValue())));
     }
 
 }
